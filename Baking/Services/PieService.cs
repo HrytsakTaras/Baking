@@ -15,8 +15,8 @@ namespace Baking.Services
 		private readonly IWebHostEnvironment _webHostEnviroment;
 		private readonly IGenericRepository<Pie> _pieRepository;
 
-		public PieService(IWebHostEnvironment webHostEnvironment, 
-			IGenericRepository<Pie> pieRepository )
+		public PieService(IWebHostEnvironment webHostEnvironment,
+			IGenericRepository<Pie> pieRepository)
 		{
 			_webHostEnviroment = webHostEnvironment;
 			_pieRepository = pieRepository;
