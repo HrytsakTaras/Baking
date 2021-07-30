@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Baking.Models.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsRegularClient)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsRegularClient)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
