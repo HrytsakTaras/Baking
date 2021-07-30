@@ -1,28 +1,28 @@
-﻿using Baking.Interfaces;
+﻿using Baking.IRepositories;
+using Baking.IServices;
 using Baking.Models;
 using Baking.ViewModels;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace Baking.Repository
+namespace Baking.Services
 {
-	public class PieRepository : IPieRepository
+	public class PieService : IPieService
 	{
-		private readonly ApplicationContext _context;
 		private readonly IWebHostEnvironment _webHostEnviroment;
+		private readonly IGenericRepository<Pie> _pieRepository;
 
-		public PieRepository(IWebHostEnvironment webHostEnvironment, ApplicationContext context)
+		public PieService(IWebHostEnvironment webHostEnvironment, 
+			IGenericRepository<Pie> pieRepository )
 		{
-			_context = context;
 			_webHostEnviroment = webHostEnvironment;
+			_pieRepository = pieRepository;
 		}
 
-		public async Task Create(PieViewModel pieViewModel)
+		public Pie CreateNew(PieViewModel pieViewModel)
 		{
 			string stringFileName = UploadFile(pieViewModel);
 			var pie = new Pie
@@ -32,9 +32,7 @@ namespace Baking.Repository
 				OrderPies = pieViewModel.OrderPies,
 				Image = stringFileName
 			};
-
-			_context.Add(pie);
-			await _context.SaveChangesAsync();
+			return pie;
 		}
 
 		private string UploadFile(PieViewModel pieViewModel)
@@ -53,35 +51,29 @@ namespace Baking.Repository
 			return fileName;
 		}
 
-		public async Task Delete(int id)
+		public async Task<IEnumerable<Pie>> GetAll()
 		{
-			var pie = await _context.Pies.FindAsync(id);
-			_context.Pies.Remove(pie);
-			await _context.SaveChangesAsync();
+			return await _pieRepository.GetAll();
 		}
 
-		public async Task<List<Pie>> GetAll()
+		public Task<Pie> GetById(int id)
 		{
-			var result =  await _context.Pies.ToListAsync();
-			return result;
+			return _pieRepository.GetById(id);
 		}
 
-		public async Task<Pie> GetById(int? id)
+		public async Task Create(PieViewModel pieViewModel)
 		{
-			var result = await _context.Pies
-				.FirstOrDefaultAsync(m => m.Id == id);
-			return result;
+			await _pieRepository.Create(CreateNew(pieViewModel));
 		}
 
 		public async Task Update(int id, Pie pie)
 		{
-			_context.Update(pie);
-			await _context.SaveChangesAsync();
+			await _pieRepository.Update(id, pie);
 		}
 
-		public bool PieExists(int id)
+		public async Task Delete(Pie pie)
 		{
-			return _context.Pies.Any(e => e.Id == id);
+			await _pieRepository.Delete(pie);
 		}
 	}
 }

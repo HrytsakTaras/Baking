@@ -1,45 +1,32 @@
-﻿using Baking.Interfaces;
+﻿using Baking.IServices;
 using Baking.Models;
 using Baking.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Baking.Controllers
 {
 	public class PieController : Controller
 	{
-		private readonly IPieRepository _pieRepository;
+		private readonly IPieService _pieService;
 
-		public PieController(IPieRepository pieRepository)
+		public PieController(IPieService pieService)
 		{
-			_pieRepository = pieRepository;
+			_pieService = pieService;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			return View(await _pieRepository.GetAll());
+			return View(await _pieService.GetAll());
 		}
 
-		public async Task<IActionResult> Details(int? id)
+		public IActionResult Details(int id)
 		{
-			if (id == null)
-			{
-				return NotFound();
-			}
+			var pie = _pieService.GetById(id);
 
-			var pie = await _pieRepository.GetById(id);
-			if (pie == null)
-			{
-				return NotFound();
-			}
-
-			return View(pie);
+			return pie != null ? View(pie) : NotFound();
 		}
 
 		public IActionResult Create()
@@ -52,25 +39,15 @@ namespace Baking.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(PieViewModel pieViewModel)
 		{
-			await _pieRepository.Create(pieViewModel);
+			await _pieService.Create(pieViewModel);
 			return RedirectToAction(nameof(Index));
 
 		}
 
-		public async Task<IActionResult> Edit(int? id)
+		public IActionResult Edit(int id)
 		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var pie = await _pieRepository.GetById(id);
-
-			if (pie == null)
-			{
-				return NotFound();
-			}
-			return View(pie);
+			var pie = _pieService.GetById(id);
+			return pie != null ? View(pie) : NotFound();
 		}
 
 		[HttpPost]
@@ -86,11 +63,11 @@ namespace Baking.Controllers
 			{
 				try
 				{
-					await _pieRepository.Update(id, pie);
+					await _pieService.Update(id, pie);
 				}
 				catch (DbUpdateConcurrencyException)
 				{
-					if (!_pieRepository.PieExists(pie.Id))
+					if (await _pieService.GetById(pie.Id) is null)
 					{
 						return NotFound();
 					}
@@ -104,27 +81,19 @@ namespace Baking.Controllers
 			return View(pie);
 		}
 
-		public async Task<IActionResult> Delete(int? id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			if (id == null)
-			{
-				return NotFound();
-			}
+			var pie = await _pieService.GetById(id);
 
-			var pie = await _pieRepository.GetById(id);
-			if (pie == null)
-			{
-				return NotFound();
-			}
-
-			return View(pie);
+			return pie != null ? View(pie) : NotFound();
 		}
 
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			await _pieRepository.Delete(id);
+			var result = await _pieService.GetById(id);
+			await _pieService.Delete(result);
 			return RedirectToAction(nameof(Index));
 		}
 	}

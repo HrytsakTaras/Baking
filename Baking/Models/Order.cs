@@ -8,12 +8,11 @@ namespace Baking.Models
 		Canceled,
 		Succeed
 	}
-	public class Order
+	public class Order : BaseEntity
 	{
-		public int Id { get; set; }
 		public Statuses Status { get; set; }
 		public DateTime CreationDate { get; set; }
-		public decimal deposit { get; set; }
+		public decimal Deposit { get; set; }
 
 		public List<OrderPie> OrderPies { get; set; }
 	}

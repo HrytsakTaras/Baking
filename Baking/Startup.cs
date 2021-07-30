@@ -1,6 +1,10 @@
 using Baking.Interfaces;
+using Baking.IRepositories;
+using Baking.IServices;
 using Baking.Models;
+using Baking.Repositories;
 using Baking.Repository;
+using Baking.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,8 +41,10 @@ namespace Baking
 					options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
 				});
 
-			services.AddScoped<IPieRepository, PieRepository>();
 			services.AddScoped<IAccountRepository, AccountRepository>();
+			services.AddScoped<IPieService, PieService>();
+			services.AddScoped<IAccountService, AccountService>();
+			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 			services.AddControllersWithViews();
 		}

@@ -1,4 +1,5 @@
 ﻿using Baking.Interfaces;
+using Baking.IRepositories;
 using Baking.Models;
 using Baking.Repository;
 using Baking.ViewModels;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -17,17 +19,21 @@ namespace Baking.Controllers
 	{
 		private readonly ApplicationContext _context;
 		private readonly IAccountRepository _accountRepository;
+		private readonly IGenericRepository<User> _userRepository;
+		private readonly IGenericRepository<Role> _roleRepository;
 
-		public AccountController(ApplicationContext context, IAccountRepository accountRepository)
+		public AccountController(ApplicationContext context, IAccountRepository accountRepository, IGenericRepository<User> userRepository, IGenericRepository<Role> roleRepository)
 		{
 			_context = context;
 			_accountRepository = accountRepository;
+			_userRepository = userRepository;
+			_roleRepository = roleRepository;
 		}
 
 		[Authorize(Roles = "admin")]
 		public async Task<IActionResult> Index()
 		{
-			var users = await _accountRepository.GetAll();
+			var users = await _userRepository.GetAll();
 			return View(users);
 		}
 
@@ -47,16 +53,15 @@ namespace Baking.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+				User user = (await _userRepository.GetAsync(x => x.Email==model.Email)).FirstOrDefault();
 				if (user == null)
 				{
 					user = new User { Email = model.Email, Password = model.Password };
-					Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "user");
+					Role userRole = (await _roleRepository.GetAsync(x => x.Name == "user")).FirstOrDefault();
 					if (userRole != null)
 						user.Role = userRole;
 
-					_context.Users.Add(user);
-					await _context.SaveChangesAsync();
+					await _userRepository.Create(user);
 
 					await Authenticate(user);
 
@@ -84,9 +89,9 @@ namespace Baking.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				User user = await _context.Users
-					.Include(u => u.Role)
-					.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+				
+				User user = _userRepository.Include(x => x.Role).FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+
 				if (user != null)
 				{
 					await Authenticate(user);

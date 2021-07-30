@@ -2,10 +2,8 @@
 
 namespace Baking.Models
 {
-	public class OrderPie
+	public class OrderPie : BaseEntity
 	{
-		public int Id { get; set; }
-
 		public int OrderId { get; set; }
 		public Order Order { get; set; }
 
