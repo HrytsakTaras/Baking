@@ -21,9 +21,9 @@ namespace Baking.Controllers
 			return View(await _pieService.GetAll());
 		}
 
-		public IActionResult Details(int id)
+		public async Task<IActionResult> Details(int id)
 		{
-			var pie = _pieService.GetById(id);
+			var pie = await _pieService.GetById(id);
 
 			return pie != null ? View(pie) : NotFound();
 		}
@@ -43,9 +43,9 @@ namespace Baking.Controllers
 
 		}
 
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
-			var pie = _pieService.GetById(id);
+			var pie = await _pieService.GetById(id);
 			return pie != null ? View(pie) : NotFound();
 		}
 
