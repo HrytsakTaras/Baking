@@ -1,6 +1,6 @@
-﻿using Baking.IRepositories;
+﻿using Baking.Data.Entity;
+using Baking.IRepositories;
 using Baking.IServices;
-using Baking.Models;
 using Baking.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System;

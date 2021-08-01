@@ -1,5 +1,5 @@
-﻿using Baking.IServices;
-using Baking.Models;
+﻿using Baking.Data.Entity;
+using Baking.IServices;
 using Baking.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Baking.Models
+namespace Baking.Data.Entity
 {
 	public enum Statuses
 	{
 		Canceled,
+		InProgress,
 		Succeed
 	}
 	public class Order : BaseEntity

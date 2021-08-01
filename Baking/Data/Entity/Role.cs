@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Baking.Models
+namespace Baking.Data.Entity
 {
 	public class Role : BaseEntity
 	{

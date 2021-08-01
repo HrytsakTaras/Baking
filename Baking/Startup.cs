@@ -1,6 +1,6 @@
+using Baking.Data;
 using Baking.IRepositories;
 using Baking.IServices;
-using Baking.Models;
 using Baking.Repositories;
 using Baking.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;

@@ -1,7 +1,6 @@
-﻿using Baking.Models;
+﻿using Baking.Data.Entity;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Baking.ViewModels
 {

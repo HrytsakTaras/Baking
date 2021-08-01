@@ -1,4 +1,4 @@
-﻿namespace Baking.Models
+﻿namespace Baking.Data.Entity
 {
 	public class User : BaseEntity
 	{

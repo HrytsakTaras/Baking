@@ -1,5 +1,5 @@
-﻿using Baking.IRepositories;
-using Baking.Models;
+﻿using Baking.Data;
+using Baking.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

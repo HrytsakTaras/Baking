@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Baking.Models
+namespace Baking.Data.Entity
 {
-	public class Pie :BaseEntity
+	public class Pie : BaseEntity
 	{
 		public string Name { get; set; }
 		public decimal Price { get; set; }

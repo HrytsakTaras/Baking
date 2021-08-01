@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Baking.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Baking.Models
+namespace Baking.Data
 {
 	public class ApplicationContext : DbContext
 	{
