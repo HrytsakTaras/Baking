@@ -6,7 +6,10 @@ namespace Baking.ViewModels
 {
 	public class OrderViewModel
 	{
-		public Pie Pies { get; set; }
-		public Order Orders { get; set; }
+		public Statuses Status { get; set; }
+		public DateTime CreationDate { get; set; } = DateTime.Now;
+		public decimal Deposit { get; set; }
+
+		public DateTime ExecutionDate { get; set; }
 	}
 }

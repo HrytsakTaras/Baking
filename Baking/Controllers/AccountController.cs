@@ -53,7 +53,7 @@ namespace Baking.Controllers
 					return RedirectToAction("Index", "Account");
 				}
 				else
-					ModelState.AddModelError("", "Невірний логін або пароль");
+					ModelState.AddModelError("", "Invalid login or password");
 			}
 			return View(model);
 		}
@@ -83,7 +83,7 @@ namespace Baking.Controllers
 
 					return RedirectToAction("Index", "Account");
 				}
-				ModelState.AddModelError("", "Невірний логін або пароль");
+				ModelState.AddModelError("", "Invalid login or password");
 			}
 			return View(model);
 		}

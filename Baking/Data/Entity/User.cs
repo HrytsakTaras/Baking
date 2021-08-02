@@ -1,4 +1,6 @@
-﻿namespace Baking.Data.Entity
+﻿using System.Collections.Generic;
+
+namespace Baking.Data.Entity
 {
 	public class User : BaseEntity
 	{
@@ -6,7 +8,9 @@
 		public string Password { get; set; }
 		public bool IsRegularClient { get; set; }
 
-		public int? RoleId { get; set; }
+		public List<Order> Orders { get; set; } = new List<Order>();
+
+		public int RoleId { get; set; }
 		public Role Role { get; set; }
 	}
 }

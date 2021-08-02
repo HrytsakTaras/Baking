@@ -34,6 +34,10 @@ namespace Baking.Data
 			modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, userRole });
 			modelBuilder.Entity<User>().HasData(new User[] { adminUser });
 			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<OrderPie>()
+				.HasKey(x => x.Id)
+				.HasName("PrimaryKey_Id");
 		}
 	}
 }

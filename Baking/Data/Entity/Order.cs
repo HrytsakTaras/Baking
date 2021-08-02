@@ -12,7 +12,7 @@ namespace Baking.Data.Entity
 	public class Order : BaseEntity
 	{
 		public Statuses Status { get; set; }
-		public DateTime CreationDate { get; set; }
+		public DateTime CreationDate { get; set; } = DateTime.Now;
 		public decimal Deposit { get; set; }
 
 		public List<OrderPie> OrderPies { get; set; }
