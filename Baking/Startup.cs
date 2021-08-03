@@ -37,6 +37,7 @@ namespace Baking
 			services.AddScoped<IPieService, PieService>();
 			services.AddScoped<IAccountService, AccountService>();
 			services.AddScoped<IOrderService, OrderService>();
+			services.AddScoped<IUserService, UserService>();
 			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 			services.AddControllersWithViews();

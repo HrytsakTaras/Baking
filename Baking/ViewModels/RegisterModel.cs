@@ -4,15 +4,15 @@ namespace Baking.ViewModels
 {
 	public class RegisterModel
 	{
-		[Required(ErrorMessage = "Заповніть поле Email")]
+		[Required(ErrorMessage = "Enter email")]
 		public string Email { get; set; }
 
-		[Required(ErrorMessage = "Введіть пароль")]
+		[Required(ErrorMessage = "Enter password")]
 		[DataType(DataType.Password)]
 		public string Password { get; set; }
 
 		[DataType(DataType.Password)]
-		[Compare("Password", ErrorMessage = "Пароль введений невірно")]
+		[Compare("Password", ErrorMessage = "Password is incorrect")]
 		public string ConfirmPassword { get; set; }
 	}
 }

@@ -1,14 +1,9 @@
-﻿using Baking.Data;
-using Baking.Data.Entity;
+﻿using Baking.Data.Entity;
 using Baking.IRepositories;
 using Baking.IServices;
-using Baking.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Baking.Controllers
@@ -34,10 +29,36 @@ namespace Baking.Controllers
 			_orderService = orderService;
 		}
 
+		[Authorize]
 		public async Task<IActionResult> Index()
 		{
-			return View(await _orderRepository.GetAll());
+			return View(await _orderService.GetOrders(User.Identity.Name));
 		}
+
+
+		/*[Authorize(Roles ="user")]
+		[HttpPost, ActionName("Index")]
+		public async Task<IActionResult> IndexForUser()
+		{
+			var users = await _userRepository.GetAll();
+			
+			var orders = await _orderRepository.GetAll();
+			var userEmail = HttpContext.User.Identity.Name;
+			int userId = (await _userRepository.GetAsync(x => x.Email == userEmail)).FirstOrDefault().Id;
+
+			var result = orders.Join(users,
+				p => p.UserId,
+				t => t.Id,
+				(p, t) => new Order
+				{
+					Status = p.Status,
+					CreationDate = p.CreationDate,
+					Deposit = p.Deposit,
+					UserId = p.UserId
+				}).Where(x=>x.UserId==userId).ToList();
+
+			return View(result);
+		}*/
 
 		/*public async Task<IActionResult> Details(int? id)
 		{
@@ -56,12 +77,9 @@ namespace Baking.Controllers
 			return View(order);
 		}*/
 
+		[Authorize]
 		public IActionResult Create()
 		{
-			if (!User.Identity.IsAuthenticated)
-			{
-				return RedirectToAction("Login", "Account");
-			}
 			return View();
 		}
 
@@ -72,7 +90,7 @@ namespace Baking.Controllers
 		{
 			var userEmail = HttpContext.User.Identity.Name;
 			await _orderService.Create(order, orderPieParam, pieId, userEmail);
-			
+
 			return RedirectToAction(nameof(Index));
 		}
 

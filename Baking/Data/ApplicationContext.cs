@@ -1,4 +1,5 @@
 ﻿using Baking.Data.Entity;
+using Baking.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Baking.Data
@@ -21,14 +22,12 @@ namespace Baking.Data
 		{
 			modelBuilder.Entity<OrderPie>().HasKey(sc => new { sc.OrderId, sc.PieId });
 
-			string adminRoleName = "admin";
-			string userRoleName = "user";
-
 			string adminEmail = "admin@test.com";
 			string adminPassword = "123456";
 
-			Role adminRole = new Role { Id = 1, Name = adminRoleName };
-			Role userRole = new Role { Id = 2, Name = userRoleName };
+			Role adminRole = new Role { Id = 1, Name = Constatns.AdminRole };
+			Role userRole = new Role { Id = 2, Name = Constatns.UserRole };
+
 			User adminUser = new User { Id = 1, Email = adminEmail, Password = adminPassword, RoleId = adminRole.Id };
 
 			modelBuilder.Entity<Role>().HasData(new Role[] { adminRole, userRole });

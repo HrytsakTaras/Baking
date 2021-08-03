@@ -17,7 +17,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-					<ul class="navbar-nav flex-grow-1">			
+					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
 							@if (!User.Identity.IsAuthenticated)
 							{
@@ -34,6 +34,16 @@
 							@if (User.Identity.IsAuthenticated)
 							{
 								<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOut">LogOut</a>
+							}
+						</li>
+						<li class="nav-item">
+							@if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+							{
+								<a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">All Orders</a>
+							}
+							else if (User.Identity.IsAuthenticated)
+							{
+								<a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">My Orders</a>
 							}
 						</li>
 						<li class="nav-item">

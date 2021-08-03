@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Baking.Data.Enums;
+using System.Collections.Generic;
 
 namespace Baking.Data.Entity
 {

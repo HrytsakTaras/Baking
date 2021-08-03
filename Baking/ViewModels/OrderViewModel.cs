@@ -1,4 +1,5 @@
 ﻿using Baking.Data.Entity;
+using Baking.Data.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace Baking.ViewModels
 {
 	public class OrderViewModel
 	{
-		public Statuses Status { get; set; }
+		public OrderStatus Status { get; set; }
 		public DateTime CreationDate { get; set; } = DateTime.Now;
 		public decimal Deposit { get; set; }
 

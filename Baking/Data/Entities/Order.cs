@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Baking.Data.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Baking.Data.Entity
 {
-	public enum Statuses
-	{
-		Canceled,
-		InProgress,
-		Succeed
-	}
 	public class Order : BaseEntity
 	{
-		public Statuses Status { get; set; }
+		public OrderStatus Status { get; set; }
 		public DateTime CreationDate { get; set; } = DateTime.Now;
 		public decimal Deposit { get; set; }
+
+		public User User { get; set; }
+		public int UserId { get; set; }
 
 		public List<OrderPie> OrderPies { get; set; }
 	}

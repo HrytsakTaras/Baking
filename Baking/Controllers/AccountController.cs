@@ -1,4 +1,5 @@
 ﻿using Baking.Data.Entity;
+using Baking.Data.Enums;
 using Baking.IServices;
 using Baking.ViewModels;
 using Microsoft.AspNetCore.Authentication;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Data;
+using Baking.Data;
 
 namespace Baking.Controllers
 {
@@ -21,7 +24,7 @@ namespace Baking.Controllers
 			_accountService = accountService;
 		}
 
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Index()
 		{
 			return View(await _accountService.GetAll());

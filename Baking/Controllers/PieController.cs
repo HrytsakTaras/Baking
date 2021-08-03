@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Baking.Data;
 
 namespace Baking.Controllers
 {
@@ -22,7 +23,7 @@ namespace Baking.Controllers
 			return View(await _pieService.GetAll());
 		}
 
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Details(int id)
 		{
 			var pie = await _pieService.GetById(id);
@@ -30,7 +31,7 @@ namespace Baking.Controllers
 			return pie != null ? View(pie) : NotFound();
 		}
 
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public IActionResult Create()
 		{
 			return View();
@@ -39,7 +40,7 @@ namespace Baking.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Create(PieViewModel pieViewModel)
 		{
 			await _pieService.Create(pieViewModel);
@@ -47,7 +48,7 @@ namespace Baking.Controllers
 
 		}
 
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Edit(int id)
 		{
 			var pie = await _pieService.GetById(id);
@@ -56,7 +57,7 @@ namespace Baking.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Edit(int id, Pie pie)
 		{
 			if (id != pie.Id)
@@ -86,7 +87,7 @@ namespace Baking.Controllers
 			return View(pie);
 		}
 
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Delete(int id)
 		{
 			var pie = await _pieService.GetById(id);
@@ -96,7 +97,7 @@ namespace Baking.Controllers
 
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
-		[Authorize(Roles = "admin")]
+		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			var result = await _pieService.GetById(id);

@@ -9,5 +9,6 @@ namespace Baking.IServices
 	public interface IOrderService
 	{
 		Task Create(Order order, OrderPie orderPieParam, int pieId, string userEmail);
+		Task<IEnumerable<Order>> GetOrders(string email);
 	}
 }
