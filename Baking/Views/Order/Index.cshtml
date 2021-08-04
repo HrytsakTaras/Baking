@@ -1,47 +1,75 @@
-﻿@model IEnumerable<Baking.Data.Entity.Order>
+﻿@using Baking.Data;
+@model IEnumerable<Baking.Data.Entity.Order>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
+<span class="text-danger">@ViewBag.ErrorMessage</span>
 <h1>Index</h1>
 
+<input type="date" id="date" class="form-control">
+<input value="Apply filter" onclick="ApplyFilter()" type="button" />
+<input value="Clear filter" onclick="ClearFilter()" type="button" />
+
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Deposit)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deposit)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CreationDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Deposit)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ExecutionDate)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.CreationDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Deposit)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ExecutionDate)
+				</td>
+				<td>
+					@if (User.IsInRole(Constatns.AdminRole))
+					{
+						<a asp-action="ConfirmOrder" asp-route-id="@item.Id">Confirm Order</a> <span>|</span>
+					}
+					<a asp-action="CancelOrder" asp-route-id="@item.Id">Cancel Order</a> |
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
+
+<script>
+	var ApplyFilter = function () {
+		var txtVal = $('#date').val();
+		window.location.href = '/Order' + '/Index/' + txtVal;
+	}
+
+	var ClearFilter = function () {
+		var txtVal = $('#date').val();
+		window.location.href = '/Order' + '/Index/';
+	}
+</script>

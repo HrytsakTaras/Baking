@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Baking.Data;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Baking.Services
 {
@@ -45,13 +47,13 @@ namespace Baking.Services
 			{
 				OrderId = order.Id,
 				PieId = pieId,
-				ExecutionDate = orderPieParam.ExecutionDate
 			});
 			await _orderPieRepository.Create(orderPie.FirstOrDefault());
 
 			user.Orders.Add(order);
 
-			order.OrderPies = orderPie;
+			var testusers = await _userRepository.GetAll();
+			var testorder = await _orderRepository.GetAll();
 
 			await _userRepository.Update(pieId, user);
 
@@ -66,7 +68,7 @@ namespace Baking.Services
 
 		public async Task<IEnumerable<Order>> GetOrders(string email)
 		{
-			if(await _userService.GetRoleByEmail(email) == "admin")
+			if(await _userService.GetRoleByEmail(email) == Constatns.AdminRole)
 			{
 				return await _orderRepository.GetAll();
 			}
@@ -74,21 +76,50 @@ namespace Baking.Services
 			var users = await _userRepository.GetAll();
 
 			var orders = await _orderRepository.GetAll();
-
-			var userId = (await GetUserByEmail(email)).Id;
+			
+			var userId = await _userService.GetIdByEmail(email);
 
 			var result = orders.Join(users,
 				p => p.UserId,
 				t => t.Id,
 				(p, t) => new Order
 				{
+					Id = p.Id,
 					Status = p.Status,
 					CreationDate = p.CreationDate,
 					Deposit = p.Deposit,
-					UserId = p.UserId
+					UserId = p.UserId,
+					ExecutionDate = p.ExecutionDate
 				}).Where(x => x.UserId == userId).ToList();
 
 			return result;
+		}
+
+		public async Task<bool> CancelOrder(int id)
+		{
+			var order = await _orderRepository.GetById(id);
+			if (order.Status == OrderStatus.Succeed)
+			{
+				return false;
+			}
+			order.Status = OrderStatus.Canceled;
+			await _orderRepository.Update(id ,order);
+			return true;
+		}
+
+		public async Task<bool> ConfirmOrder(int id)
+		{
+			Order order = await _orderRepository.GetById(id);
+			if(order.Status == OrderStatus.Canceled)
+			{
+				return false;
+			}
+			order.Status = OrderStatus.Succeed;
+			await _orderRepository.Update(id, order);
+
+			await _userService.ChangeToRegularClient(order);
+
+			return true;
 		}
 	}
 }

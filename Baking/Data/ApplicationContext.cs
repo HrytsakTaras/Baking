@@ -1,6 +1,7 @@
 ﻿using Baking.Data.Entity;
 using Baking.Data.Enums;
 using Microsoft.EntityFrameworkCore;
+using Baking.ViewModels;
 
 namespace Baking.Data
 {

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Baking.Data.Entity
 {
 	public class OrderPie : BaseEntity
 	{
-		public DateTime ExecutionDate { get; set; }
+		//public DateTime ExecutionDate { get; set; }
 
 		[ForeignKey("Order")]
 		public int OrderId { get; set; }

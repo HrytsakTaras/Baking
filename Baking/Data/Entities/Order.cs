@@ -9,6 +9,7 @@ namespace Baking.Data.Entity
 		public OrderStatus Status { get; set; }
 		public DateTime CreationDate { get; set; } = DateTime.Now;
 		public decimal Deposit { get; set; }
+		public DateTime ExecutionDate { get; set; }
 
 		public User User { get; set; }
 		public int UserId { get; set; }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Baking.Data.Entity.Pie>
+﻿@using Baking.Data;
+@model IEnumerable<Baking.Data.Entity.Pie>
 
 @{
     ViewData["Title"] = "Index";
@@ -40,14 +41,14 @@
                 <img src="~/images/@item.Image" width="200" height="200"; asp-append-version="true"/>
             </td>
 			<td>
-				@if (User.IsInRole("admin"))
+				@if (User.IsInRole(Constatns.AdminRole))
 				{
 					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <span>|</span>
 				}
 				<a asp-controller="Order" asp-action="Create" asp-route-id="@item.Id">Buy</a> 
-				@if (User.IsInRole("admin"))
+				@if (User.IsInRole(Constatns.AdminRole))
 				{
-			            <span>|</span><a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+			        <span>|</span><a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 				}
 				
 			</td>
