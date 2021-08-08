@@ -20,41 +20,56 @@ namespace Baking.Services
 		private readonly IGenericRepository<OrderPie> _orderPieRepository;
 		private readonly IGenericRepository<User> _userRepository;
 		private readonly IUserService _userService;
+		private readonly IPieService _pieService;
 
 		public OrderService(IGenericRepository<Order> orderRepository,
 			IGenericRepository<Pie> pieRepository,
 			IGenericRepository<OrderPie> orderPieRepository,
 			IGenericRepository<User> userRepository,
-			IUserService userService)
+			IUserService userService, 
+			IPieService pieService)
 		{
 			_orderRepository = orderRepository;
 			_pieRepository = pieRepository;
 			_orderPieRepository = orderPieRepository;
 			_userRepository = userRepository;
 			_userService = userService;
+			_pieService = pieService;
 		}
 
-		public async Task Create(Order order, OrderPie orderPieParam, int pieId, string userEmail)
+		public async Task<bool> Create(Order order, OrderPie orderPieParam, int pieId, string userEmail)
 		{
+			var result = await _pieRepository.GetById(pieId);
+			var percentFromPrice = Convert.ToDouble(result.Price) * 0.2;
+			
 			User user = await GetUserByEmail(userEmail);
 
-			order.Status = OrderStatus.WaitingToStart;
-			order.User = user;
-			await _orderRepository.Create(order);
-			List<OrderPie> orderPie = new List<OrderPie>();
-
-			orderPie.Add(new OrderPie
+			if (Convert.ToDouble(order.Deposit) > await _pieService.Get20PercentFromPrice(pieId) || user.IsRegularClient)
 			{
-				OrderId = order.Id,
-				PieId = pieId,
-			});
-			await _orderPieRepository.Create(orderPie.FirstOrDefault());
 
-			user.Orders.Add(order);
+				order.Status = OrderStatus.WaitingToStart;
+				order.User = user;
+				await _orderRepository.Create(order);
+				List<OrderPie> orderPie = new List<OrderPie>();
 
-			await _userRepository.Update(pieId, user);
+				orderPie.Add(new OrderPie
+				{
+					OrderId = order.Id,
+					PieId = pieId,
+				});
 
-			await _orderRepository.Update(order.Id, order);
+				await _orderPieRepository.Create(orderPie.FirstOrDefault());
+
+				user.Orders.Add(order);
+				user.Balance -= order.Deposit;
+
+				await _userRepository.Update(pieId, user);
+
+				await _orderRepository.Update(order.Id, order);
+
+				return true;
+			}
+			return false;
 		}
 
 		private async Task<User> GetUserByEmail(string userEmail)
@@ -94,15 +109,23 @@ namespace Baking.Services
 
 		public async Task CancelOrder(int id)
 		{
+			
 			var order = await _orderRepository.GetById(id);
+			var user =  (await _userRepository.GetAsync(x => x.Id == order.UserId)).FirstOrDefault();
 			if (order.Status == OrderStatus.Succeed || order.Status == OrderStatus.InProgress)
 			{
 				order.Status = OrderStatus.CanceledAfterStart;
 				await _orderRepository.Update(id, order);
+
+				user.Balance += order.Deposit;
+				await _userRepository.Update(id, user);
 				return;
 			}
 			order.Status = OrderStatus.Canceled;
-			await _orderRepository.Update(id ,order);
+			await _orderRepository.Update(id, order);
+
+			user.Balance += order.Deposit;
+			await _userRepository.Update(id, user);
 		}
 
 		public async Task<bool> ConfirmOrder(int id)

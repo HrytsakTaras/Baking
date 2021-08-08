@@ -75,5 +75,11 @@ namespace Baking.Services
 		{
 			await _pieRepository.Delete(pie);
 		}
+
+		public async Task<double> Get20PercentFromPrice(int pieId)
+		{
+			var pie = await _pieRepository.GetById(pieId);
+			return Convert.ToDouble(pie.Price) * 0.2;
+		}
 	}
 }

@@ -12,5 +12,6 @@ namespace Baking.IServices
 		Task Create(PieViewModel pieViewModel);
 		Task Update(int id, Pie pie);
 		Task Delete(Pie pie);
+		Task<double> Get20PercentFromPrice(int pieId);
 	}
 }

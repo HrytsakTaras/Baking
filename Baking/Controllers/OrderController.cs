@@ -18,18 +18,21 @@ namespace Baking.Controllers
 		private readonly IGenericRepository<OrderPie> _orderPieRepository;
 		private readonly IGenericRepository<User> _userRepository;
 		private readonly IOrderService _orderService;
+		private readonly IPieService _pieService;
 
 		public OrderController(IGenericRepository<Order> orderRepository,
 			IGenericRepository<Pie> pieRepository,
 			IGenericRepository<OrderPie> orderPieRepository,
 			IGenericRepository<User> userRepository,
-			IOrderService orderService)
+			IOrderService orderService,
+			IPieService pieService)
 		{
 			_orderRepository = orderRepository;
 			_pieRepository = pieRepository;
 			_orderPieRepository = orderPieRepository;
 			_userRepository = userRepository;
 			_orderService = orderService;
+			_pieService = pieService;
 		}
 
 		[Authorize]
@@ -108,7 +111,14 @@ namespace Baking.Controllers
 		public async Task<IActionResult> Create(Order order, OrderPie orderPieParam, int pieId)
 		{
 			var userEmail = HttpContext.User.Identity.Name;
-			await _orderService.Create(order, orderPieParam, pieId, userEmail);
+			var isCreated = await _orderService.Create(order, orderPieParam, pieId, userEmail);
+			
+
+			if (!isCreated)
+			{
+				ViewBag.ErrorMessage = $"You must give 20 percent of the price. 20 percent of the price = {await _pieService.Get20PercentFromPrice(pieId)}";
+				return View();
+			}
 
 			return RedirectToAction(nameof(Index));
 		}
