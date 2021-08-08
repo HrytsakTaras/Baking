@@ -49,7 +49,7 @@
 						<li class="nav-item">
 							@if (User.Identity.IsAuthenticated)
 							{
-								<a class="nav-link text-dark float-md-right">hello @User.Identity.Name</a>
+								<a class="nav-link text-dark" asp-controller="Account" asp-action="Edit">hello @User.Identity.Name</a>
 							}
 						</li>
 					</ul>

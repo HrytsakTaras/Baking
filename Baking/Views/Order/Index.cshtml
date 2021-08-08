@@ -12,9 +12,6 @@
 <input value="Apply filter" onclick="ApplyFilter()" type="button" />
 <input value="Clear filter" onclick="ClearFilter()" type="button" />
 
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
 <table class="table">
 	<thead>
 		<tr>
@@ -52,6 +49,7 @@
 				<td>
 					@if (User.IsInRole(Constatns.AdminRole))
 					{
+						<a asp-action="StartOrder" asp-route-id="@item.Id">Start Order</a> <span>|</span>
 						<a asp-action="ConfirmOrder" asp-route-id="@item.Id">Confirm Order</a> <span>|</span>
 					}
 					<a asp-action="CancelOrder" asp-route-id="@item.Id">Cancel Order</a> |

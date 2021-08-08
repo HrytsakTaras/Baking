@@ -14,5 +14,8 @@ namespace Baking.ViewModels
 		[DataType(DataType.Password)]
 		[Compare("Password", ErrorMessage = "Password is incorrect")]
 		public string ConfirmPassword { get; set; }
+
+		[Required]
+		public decimal Balance { get; set; }
 	}
 }

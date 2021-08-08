@@ -35,7 +35,11 @@ namespace Baking.Services
 
 		public async Task<User> Create(RegisterModel model)
 		{
-			User user = new User { Email = model.Email, Password = model.Password };
+			User user = new User {
+				Email = model.Email,
+				Password = model.Password,
+				Balance = model.Balance
+			};
 			Role userRole = await GetRoleAsync("user");
 			if (userRole != null)
 				user.Role = userRole;

@@ -34,6 +34,11 @@ namespace Baking.Services
 			return test.FirstOrDefault();
 		}
 
+		public async Task<User> getUserByEmail(string email)
+		{
+			return (await _userRepository.GetAsync(x => x.Email == email)).FirstOrDefault();
+		}
+
 		public async Task<int> GetIdByEmail(string email)
 		{
 			var user = (await _userRepository.GetAsync(x => x.Email == email)).FirstOrDefault();
@@ -70,6 +75,13 @@ namespace Baking.Services
 			}
 
 			await _userRepository.Update(userId, user);
+		}
+
+		public async Task ChangeDeposit(string email, User newUser)
+		{
+			var user = await getUserByEmail(email);
+			user.Balance = newUser.Balance;
+			await _userRepository.Update(user.Id, user);
 		}
 	}
 }

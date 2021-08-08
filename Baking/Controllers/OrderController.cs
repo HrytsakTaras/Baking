@@ -5,9 +5,7 @@ using Baking.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,11 +51,7 @@ namespace Baking.Controllers
 		[Route("Order/CancelOrder/{id:int}")]
 		public async Task<IActionResult> CancelOrder(int id)
 		{
-			var status = await _orderService.CancelOrder(id);
-			if (!status)
-			{
-				TempData["Message"] = "You can't change status from succeed to cancel";
-			}
+			await _orderService.CancelOrder(id);
 			return RedirectToAction("Index");
 		}
 
@@ -67,7 +61,18 @@ namespace Baking.Controllers
 			var status = await _orderService.ConfirmOrder(id);
 			if (!status)
 			{
-				TempData["Message"] = "You can't change status from cancel to succeed";
+				TempData["Message"] = "You can't change this status.";
+			}
+			return RedirectToAction("Index");
+		}
+
+		[Route("Order/StartOrder/{id:int}")]
+		public async Task<IActionResult> StartOrder(int id)
+		{
+			var status = await _orderService.StartOrder(id);
+			if (!status)
+			{
+				TempData["Message"] = "You can't change this status.";
 			}
 			return RedirectToAction("Index");
 		}
@@ -107,85 +112,5 @@ namespace Baking.Controllers
 
 			return RedirectToAction(nameof(Index));
 		}
-
-		/*public async Task<IActionResult> Edit(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var order = await _context.Orders.FindAsync(id);
-			if (order == null)
-			{
-				return NotFound();
-			}
-			return View(order);
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Status,CreationDate,Deposit,Id")] Order order)
-		{
-			if (id != order.Id)
-			{
-				return NotFound();
-			}
-
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					_context.Update(order);
-					await _context.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!OrderExists(order.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
-				return RedirectToAction(nameof(Index));
-			}
-			return View(order);
-		}
-
-		public async Task<IActionResult> Delete(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var order = await _context.Orders
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (order == null)
-			{
-				return NotFound();
-			}
-
-			return View(order);
-		}
-
-		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeleteConfirmed(int id)
-		{
-			var order = await _context.Orders.FindAsync(id);
-			_context.Orders.Remove(order);
-			await _context.SaveChangesAsync();
-			return RedirectToAction(nameof(Index));
-		}
-
-		private bool OrderExists(int id)
-		{
-			return _context.Orders.Any(e => e.Id == id);
-		}
-	}*/
 	}
 }

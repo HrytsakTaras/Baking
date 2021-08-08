@@ -38,7 +38,7 @@ namespace Baking.Services
 		{
 			User user = await GetUserByEmail(userEmail);
 
-			order.Status = OrderStatus.InProgress;
+			order.Status = OrderStatus.WaitingToStart;
 			order.User = user;
 			await _orderRepository.Create(order);
 			List<OrderPie> orderPie = new List<OrderPie>();
@@ -51,9 +51,6 @@ namespace Baking.Services
 			await _orderPieRepository.Create(orderPie.FirstOrDefault());
 
 			user.Orders.Add(order);
-
-			var testusers = await _userRepository.GetAll();
-			var testorder = await _orderRepository.GetAll();
 
 			await _userRepository.Update(pieId, user);
 
@@ -95,31 +92,44 @@ namespace Baking.Services
 			return result;
 		}
 
-		public async Task<bool> CancelOrder(int id)
+		public async Task CancelOrder(int id)
 		{
 			var order = await _orderRepository.GetById(id);
-			if (order.Status == OrderStatus.Succeed)
+			if (order.Status == OrderStatus.Succeed || order.Status == OrderStatus.InProgress)
 			{
-				return false;
+				order.Status = OrderStatus.CanceledAfterStart;
+				await _orderRepository.Update(id, order);
+				return;
 			}
 			order.Status = OrderStatus.Canceled;
 			await _orderRepository.Update(id ,order);
-			return true;
 		}
 
 		public async Task<bool> ConfirmOrder(int id)
 		{
 			Order order = await _orderRepository.GetById(id);
-			if(order.Status == OrderStatus.Canceled)
+			if(order.Status == OrderStatus.Canceled ||
+				order.Status == OrderStatus.CanceledAfterStart)
 			{
 				return false;
 			}
 			order.Status = OrderStatus.Succeed;
 			await _orderRepository.Update(id, order);
-
 			await _userService.ChangeToRegularClient(order);
 
 			return true;
+		}
+
+		public async Task<bool> StartOrder(int id)
+		{
+			var order = await _orderRepository.GetById(id);
+			if (order.Status == OrderStatus.WaitingToStart)
+			{
+				order.Status = OrderStatus.InProgress;
+				await _orderRepository.Update(id, order);
+				return true;
+			}
+			return false;
 		}
 	}
 }

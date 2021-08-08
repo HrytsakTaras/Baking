@@ -7,6 +7,7 @@ namespace Baking.Data.Entity
 		public string Email { get; set; }
 		public string Password { get; set; }
 		public bool IsRegularClient { get; set; }
+		public decimal Balance { get; set; }
 
 		public List<Order> Orders { get; set; } = new List<Order>();
 

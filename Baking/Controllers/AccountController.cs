@@ -17,10 +17,13 @@ namespace Baking.Controllers
 	{
 
 		private readonly IAccountService _accountService;
+		private readonly IUserService _userService;
 
-		public AccountController(IAccountService accountService)
+		public AccountController(IAccountService accountService,
+			IUserService userService)
 		{
 			_accountService = accountService;
+			_userService = userService;
 		}
 
 		[Authorize(Roles = Constatns.AdminRole)]
@@ -108,6 +111,22 @@ namespace Baking.Controllers
 		{
 			await HttpContext.SignOutAsync();
 			return RedirectToAction("Index", "Account");
+		}
+
+		[HttpGet, ActionName("Edit")]
+		public async Task<IActionResult> EditProfile()
+		{
+			var email = User.Identity.Name;
+			var user = await _userService.getUserByEmail(email);
+			return View(user);
+		}
+
+		[HttpPost, ActionName("Edit")]
+		public async Task<IActionResult> EditProfile(User newUser)
+		{
+			var email = User.Identity.Name;
+			await _userService.ChangeDeposit(email, newUser);
+			return RedirectToAction("Index", "Pie");
 		}
 	}
 }
