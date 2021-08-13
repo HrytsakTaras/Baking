@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Baking.Data.Entity
+namespace Baking.Data.Entities
 {
 	public class Order : BaseEntity
 	{

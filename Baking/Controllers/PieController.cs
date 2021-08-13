@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using Baking.IServices;
 using Baking.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -6,30 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Baking.Data;
+using MediatR;
+using Baking.Features;
+using System.Threading;
+using Microsoft.AspNetCore.Http;
 
 namespace Baking.Controllers
 {
 	public class PieController : Controller
 	{
-		private readonly IPieService _pieService;
+		private readonly IMediator _mediator;
 
-		public PieController(IPieService pieService)
+		public PieController(IMediator mediator)
 		{
-			_pieService = pieService;
+			_mediator = mediator;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			return View(await _pieService.GetAll());
+			return View(await _mediator.Send(new GetAllPieQuery()));
 		}
 
-		[Authorize(Roles = Constatns.AdminRole)]
-		public async Task<IActionResult> Details(int id)
-		{
-			var pie = await _pieService.GetById(id);
-
-			return pie != null ? View(pie) : NotFound();
-		}
 
 		[Authorize(Roles = Constatns.AdminRole)]
 		public IActionResult Create()
@@ -41,9 +38,9 @@ namespace Baking.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = Constatns.AdminRole)]
-		public async Task<IActionResult> Create(PieViewModel pieViewModel)
+		public async Task<IActionResult> Create(AddPieCommand client)
 		{
-			await _pieService.Create(pieViewModel);
+			Pie pie = await _mediator.Send(client);
 			return RedirectToAction(nameof(Index));
 
 		}
@@ -51,16 +48,16 @@ namespace Baking.Controllers
 		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Edit(int id)
 		{
-			var pie = await _pieService.GetById(id);
+			var pie = await _mediator.Send(new GetPieByIdQuery { Id = id });
 			return pie != null ? View(pie) : NotFound();
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = Constatns.AdminRole)]
-		public async Task<IActionResult> Edit(int id, Pie pie)
+		public async Task<IActionResult> Edit(int id, UpdatePieByIdCommand command)
 		{
-			if (id != pie.Id)
+			if (id != command.Id)
 			{
 				return NotFound();
 			}
@@ -69,11 +66,11 @@ namespace Baking.Controllers
 			{
 				try
 				{
-					await _pieService.Update(id, pie);
+					await _mediator.Send(command);
 				}
 				catch (DbUpdateConcurrencyException)
 				{
-					if (await _pieService.GetById(pie.Id) is null)
+					if (await _mediator.Send(new GetPieByIdQuery { Id = id }) is null)
 					{
 						return NotFound();
 					}
@@ -84,14 +81,13 @@ namespace Baking.Controllers
 				}
 				return RedirectToAction(nameof(Index));
 			}
-			return View(pie);
+			return View(command);
 		}
 
 		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var pie = await _pieService.GetById(id);
-
+			var pie = await _mediator.Send(new GetPieByIdQuery { Id = id });
 			return pie != null ? View(pie) : NotFound();
 		}
 
@@ -100,8 +96,7 @@ namespace Baking.Controllers
 		[Authorize(Roles = Constatns.AdminRole)]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var result = await _pieService.GetById(id);
-			await _pieService.Delete(result);
+			var pie = await _mediator.Send(new DeletePieByIdCommand { Id = id });
 			return RedirectToAction(nameof(Index));
 		}
 	}

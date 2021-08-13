@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using System.Threading.Tasks;
 
 namespace Baking.IServices

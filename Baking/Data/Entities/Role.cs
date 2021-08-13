@@ -1,7 +1,7 @@
 ﻿using Baking.Data.Enums;
 using System.Collections.Generic;
 
-namespace Baking.Data.Entity
+namespace Baking.Data.Entities
 {
 	public class Role : BaseEntity
 	{

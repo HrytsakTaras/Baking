@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using Baking.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;

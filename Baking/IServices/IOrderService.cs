@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

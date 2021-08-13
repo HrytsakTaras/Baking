@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Baking.Data.Entity
+namespace Baking.Data.Entities
 {
 	public class User : BaseEntity
 	{

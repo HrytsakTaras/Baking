@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 

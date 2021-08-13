@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using Baking.IServices;
 using Baking.ViewModels;
 using Microsoft.AspNetCore.Authentication;

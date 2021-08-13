@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Baking.Data.Entity
+namespace Baking.Data.Entities
 {
 	public class OrderPie : BaseEntity
 	{

@@ -1,5 +1,5 @@
 ﻿@using Baking.Data;
-@model IEnumerable<Baking.Data.Entity.Pie>
+@model IEnumerable<Baking.Data.Entities.Pie>
 
 @{
     ViewData["Title"] = "Index";
@@ -37,9 +37,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
-            <td>
-                <img src="~/images/@item.Image" width="200" height="200"; asp-append-version="true"/>
-            </td>
+			<td>
+					<img src="~/images/@item.Image" width="200" height="200"; asp-append-version="true"/>
+				</td>
 			<td>
 				@if (User.IsInRole(Constatns.AdminRole))
 				{

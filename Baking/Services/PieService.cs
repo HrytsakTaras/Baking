@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using Baking.IRepositories;
 using Baking.IServices;
 using Baking.ViewModels;
@@ -24,18 +24,18 @@ namespace Baking.Services
 
 		public Pie CreateNew(PieViewModel pieViewModel)
 		{
-			string stringFileName = UploadFile(pieViewModel);
+			//string stringFileName = UploadFile(pieViewModel);
 			var pie = new Pie
 			{
 				Name = pieViewModel.Name,
 				Price = pieViewModel.Price,
 				OrderPies = pieViewModel.OrderPies,
-				Image = stringFileName
+				//Image = stringFileName
 			};
 			return pie;
 		}
 
-		private string UploadFile(PieViewModel pieViewModel)
+		/*private string UploadFile(PieViewModel pieViewModel)
 		{
 			string fileName = null;
 			if (pieViewModel.Image != null)
@@ -49,7 +49,7 @@ namespace Baking.Services
 				}
 			}
 			return fileName;
-		}
+		}*/
 
 		public async Task<IEnumerable<Pie>> GetAll()
 		{

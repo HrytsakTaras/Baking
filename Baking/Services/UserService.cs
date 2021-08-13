@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using Baking.Data.Enums;
 using Baking.IRepositories;
 using Baking.IServices;

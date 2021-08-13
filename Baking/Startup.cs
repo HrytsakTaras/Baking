@@ -3,6 +3,7 @@ using Baking.IRepositories;
 using Baking.IServices;
 using Baking.Repositories;
 using Baking.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace Baking
 {
@@ -40,6 +42,7 @@ namespace Baking
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+			services.AddMediatR(Assembly.GetExecutingAssembly());
 			services.AddControllersWithViews();
 		}
 

@@ -1,4 +1,4 @@
-﻿using Baking.Data.Entity;
+﻿using Baking.Data.Entities;
 using Baking.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using Baking.ViewModels;

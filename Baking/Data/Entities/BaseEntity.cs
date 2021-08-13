@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Baking.Data.Entity
+namespace Baking.Data.Entities
 {
 	public class BaseEntity
 	{
