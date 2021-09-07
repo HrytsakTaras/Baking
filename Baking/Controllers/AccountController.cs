@@ -8,22 +8,25 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Data;
 using Baking.Data;
+using MediatR;
+using Baking.Features.Account;
 
 namespace Baking.Controllers
 {
 	public class AccountController : Controller
 	{
-
+		private readonly IMediator _mediator;
 		private readonly IAccountService _accountService;
 		private readonly IUserService _userService;
 
 		public AccountController(IAccountService accountService,
-			IUserService userService)
+			IUserService userService,
+			 IMediator mediator)
 		{
 			_accountService = accountService;
 			_userService = userService;
+			_mediator = mediator;
 		}
 
 		[Authorize(Roles = Constatns.AdminRole)]
@@ -44,23 +47,23 @@ namespace Baking.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Register(RegisterModel model)
+		public async Task<IActionResult> Register(AddAccountCommand accountCommand)
 		{
+			User user = null;
 			if (ModelState.IsValid)
 			{
-				User user = await _accountService.GetUserAsync(model.Email);
-				if (user == null)
+				user = await _mediator.Send(accountCommand);
+				if(user == null)
 				{
-					user = await _accountService.Create(model);
-
-					await Authenticate(user);
-
-					return RedirectToAction("Index", "Account");
+					ModelState.AddModelError("", "User is exists");
+					return View();
 				}
-				else
-					ModelState.AddModelError("", "Invalid login or password");
+				await Authenticate(user);
+				return RedirectToAction("Index", "Account");
 			}
-			return View(model);
+			else
+				ModelState.AddModelError("", "Invalid login or password");
+			return View(user);
 		}
 
 		[HttpGet]
@@ -75,12 +78,12 @@ namespace Baking.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Login(LoginModel model)
+		public async Task<IActionResult> Login(User userModel)
 		{
 			if (ModelState.IsValid)
 			{
 
-				User user = _accountService.Include(model);
+				User user = await _mediator.Send(new GetUserQuery { Email = userModel.Email, Password = userModel.Password });
 
 				if (user != null)
 				{
@@ -90,7 +93,7 @@ namespace Baking.Controllers
 				}
 				ModelState.AddModelError("", "Invalid login or password");
 			}
-			return View(model);
+			return View(userModel);
 		}
 
 		private async Task Authenticate(User user)

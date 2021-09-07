@@ -38,9 +38,9 @@ namespace Baking.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = Constatns.AdminRole)]
-		public async Task<IActionResult> Create(AddPieCommand client)
+		public async Task<IActionResult> Create(AddPieCommand pieCommand)
 		{
-			Pie pie = await _mediator.Send(client);
+			Pie pie = await _mediator.Send(pieCommand);
 			return RedirectToAction(nameof(Index));
 
 		}

@@ -12,6 +12,7 @@ namespace Baking.Features
 	public class GetPieByIdQuery : IRequest<Pie>
 	{
 		public int Id { get; set; }
+
 		public class GetPieByIdHandler : IRequestHandler<GetPieByIdQuery, Pie>
 		{
 			private readonly IGenericRepository<Pie> _pieRepository;

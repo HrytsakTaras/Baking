@@ -50,7 +50,8 @@ namespace Baking.Services
 
 		public User Include(LoginModel model)
 		{
-			return _userRepository.Include(x => x.Role).FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+			return _userRepository.Include(x => x.Role)
+				.FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
 		}
 
 	}

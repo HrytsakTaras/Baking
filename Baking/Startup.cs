@@ -3,6 +3,7 @@ using Baking.IRepositories;
 using Baking.IServices;
 using Baking.Repositories;
 using Baking.Services;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -43,6 +44,7 @@ namespace Baking
 			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 			services.AddMediatR(Assembly.GetExecutingAssembly());
+			services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
 			services.AddControllersWithViews();
 		}
 
